@@ -1,33 +1,38 @@
-# YOLOv5 🚀 by Ultralytics, AGPL-3.0 license
+# Ultralytics 🚀 - AGPL-3.0 License https://ultralytics.com/license
+# Ultralytics Actions https://github.com/ultralytics/actions
+# This workflow automatically formats code and documentation in PRs to official Ultralytics standards
 
-name: Greetings
+name: Ultralytics Actions
 
 on:
-  pull_request_target:
-    types: [opened]
   issues:
     types: [opened]
+  pull_request_target:
+    branches: [main, master]
+    types: [opened, closed, synchronize, review_requested]
 
 jobs:
-  greeting:
+  format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/first-interaction@v1
+      - name: Run Ultralytics Formatting
+        uses: ultralytics/actions@main
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          pr-message: |
-            👋 Hello @${{ github.actor }}, thank you for submitting a YOLOv5 🚀 PR! To allow your work to be integrated as seamlessly as possible, we advise you to:
-
-            - ✅ Verify your PR is **up-to-date** with `ultralytics/yolov5` `master` branch. If your PR is behind you can update your code by clicking the 'Update branch' button or by running `git pull` and `git merge master` locally.
-            - ✅ Verify all YOLOv5 Continuous Integration (CI) **checks are passing**.
-            - ✅ Reduce changes to the absolute **minimum** required for your bug fix or feature addition. _"It is not daily increase but daily decrease, hack away the unessential. The closer to the source, the less wastage there is."_  — Bruce Lee
-
-          issue-message: |
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }} # note GITHUB_TOKEN automatically generated
+          labels: true # autolabel issues and PRs
+          python: true # format Python code and docstrings
+          prettier: true # format YAML, JSON, Markdown and CSS
+          spelling: true # check spelling
+          links: false # check broken links
+          summary: true # print PR summary with GPT4o (requires 'openai_api_key')
+          openai_azure_api_key: ${{ secrets.OPENAI_AZURE_API_KEY }}
+          openai_azure_endpoint: ${{ secrets.OPENAI_AZURE_ENDPOINT }}
+          first_issue_response: |
             👋 Hello @${{ github.actor }}, thank you for your interest in YOLOv5 🚀! Please visit our ⭐️ [Tutorials](https://docs.ultralytics.com/yolov5/) to get started, where you can find quickstart guides for simple tasks like [Custom Data Training](https://docs.ultralytics.com/yolov5/tutorials/train_custom_data/) all the way to advanced concepts like [Hyperparameter Evolution](https://docs.ultralytics.com/yolov5/tutorials/hyperparameter_evolution/).
 
             If this is a 🐛 Bug Report, please provide a **minimum reproducible example** to help us debug it.
 
-            If this is a custom training ❓ Question, please provide as much information as possible, including dataset image examples and training logs, and verify you are following our [Tips for Best Training Results](https://docs.ultralytics.com/yolov5/tutorials/tips_for_best_training_results/).
+            If this is a custom training ❓ Question, please provide as much information as possible, including dataset image examples and training logs, and verify you are following our [Tips for Best Training Results](https://docs.ultralytics.com/guides/model-training-tips//).
 
             ## Requirements
 
